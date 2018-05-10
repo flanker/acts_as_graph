@@ -1,3 +1,4 @@
 acts_as_graph-*.gem
 .rspec_status
 tags
+.byebug_history

@@ -1,4 +1,5 @@
 require 'bundler/setup'
+require 'acts_as_graph'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

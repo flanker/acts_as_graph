@@ -18,6 +18,15 @@ RSpec.describe ActsAsGraph do
 
   end
 
+  class Job
+
+    attr_reader :title
+
+    def initialize title
+      @title = title
+    end
+  end
+
   context '#descendant_depended_tasks' do
 
     it 'should get all descendant tasks' do
@@ -57,13 +66,24 @@ RSpec.describe ActsAsGraph do
       expect(descendant_depended_tasks.length).to eq(5)
       expect(descendant_depended_tasks).to match_array([task_2, task_3, task_4, task_5, task_6])
     end
+
+    it 'supports other type of object as a child' do
+      task_1 = Task.new 'task_1'
+      task_2 = Task.new 'task_2'
+      job_1 = Job.new 'job_1'
+      task_1.depended_tasks = [task_2, job_1]
+
+      descendant_depended_tasks = task_1.descendant_depended_tasks
+      expect(descendant_depended_tasks.length).to eq(2)
+      expect(descendant_depended_tasks).to match_array([task_2, job_1])
+    end
   end
 
   context '#has_circular_reference?' do
 
     it 'works if there is no circular reference' do
       task_1 = Task.new 'task_1'
-      task_2 = Task.new 'task_2'
+      task_2 = Task.new 'task_2', [task_1]
       task_3 = Task.new 'task_3', [task_1, task_2]
 
       expect(task_3.has_circular_reference?).to be false
@@ -95,6 +115,14 @@ RSpec.describe ActsAsGraph do
       expect(task_1.has_circular_reference?).to be true
       expect(task_2.has_circular_reference?).to be true
       expect(task_3.has_circular_reference?).to be true
+    end
+
+    it 'supports other type of object as a child' do
+      task_1 = Task.new 'task_1'
+      job_1 = Job.new 'job_1'
+      task_1.depended_tasks = [job_1]
+
+      expect(task_1.has_circular_reference?).to be false
     end
   end
 

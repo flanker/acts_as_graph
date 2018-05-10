@@ -22,5 +22,6 @@ Gem::Specification.new do |s|
   s.require_path = ['lib']
 
   s.add_runtime_dependency 'rspec'
+  s.add_runtime_dependency 'byebug'
 
 end

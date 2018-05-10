@@ -30,20 +30,22 @@ module ActsAsGraph
     child_vertices.each do |child_vertice|
       next if vertices_found.include?(child_vertice) || child_vertice == starting_vertice
       vertices_found << child_vertice
-      child_vertice.collect_child_vertices vertices_found, starting_vertice: starting_vertice
+      child_vertice.collect_child_vertices vertices_found, starting_vertice: starting_vertice if child_vertice.respond_to?(:collect_child_vertices)
     end
   end
 
   def has_circular_reference?
-    vertices_found = []
-    has_circular_reference_in_child_vertices? vertices_found, starting_vertice: self
+    child_vertices.any? do |child_vertice|
+      path = [self, child_vertice]
+      child_vertice.has_circular_reference_in_path?(path) if child_vertice.respond_to?(:has_circular_reference_in_path?)
+    end
   end
 
-  def has_circular_reference_in_child_vertices? vertices_found, starting_vertice: nil
+  def has_circular_reference_in_path? path
     child_vertices.any? do |child_vertice|
-      return true if vertices_found.include?(child_vertice) || child_vertice == starting_vertice
-      vertices_found << child_vertice
-      child_vertice.has_circular_reference_in_child_vertices? vertices_found, starting_vertice: starting_vertice
+      return true if path.include?(child_vertice)
+      path << child_vertice
+      child_vertice.has_circular_reference_in_path?(path) if child_vertice.respond_to?(:has_circular_reference_in_path?)
     end
   end
 

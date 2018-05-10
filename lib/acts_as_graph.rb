@@ -34,6 +34,19 @@ module ActsAsGraph
     end
   end
 
+  def has_circular_reference?
+    vertices_found = []
+    has_circular_reference_in_child_vertices? vertices_found, starting_vertice: self
+  end
+
+  def has_circular_reference_in_child_vertices? vertices_found, starting_vertice: nil
+    child_vertices.any? do |child_vertice|
+      return true if vertices_found.include?(child_vertice) || child_vertice == starting_vertice
+      vertices_found << child_vertice
+      child_vertice.has_circular_reference_in_child_vertices? vertices_found, starting_vertice: starting_vertice
+    end
+  end
+
   private
 
   def children_method_name

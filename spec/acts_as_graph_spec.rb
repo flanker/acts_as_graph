@@ -18,42 +18,84 @@ RSpec.describe ActsAsGraph do
 
   end
 
-  it 'should get all descendant tasks' do
-    task_1 = Task.new 'task_1'
-    task_2 = Task.new 'task_2'
-    task_3 = Task.new 'task_3', [task_1, task_2]
+  context '#descendant_depended_tasks' do
 
-    descendant_depended_tasks = task_3.descendant_depended_tasks
-    expect(descendant_depended_tasks.length).to eq(2)
-    expect(descendant_depended_tasks).to match_array([task_1, task_2])
+    it 'should get all descendant tasks' do
+      task_1 = Task.new 'task_1'
+      task_2 = Task.new 'task_2'
+      task_3 = Task.new 'task_3', [task_1, task_2]
+
+      descendant_depended_tasks = task_3.descendant_depended_tasks
+      expect(descendant_depended_tasks.length).to eq(2)
+      expect(descendant_depended_tasks).to match_array([task_1, task_2])
+    end
+
+    it 'should handle the circular reference' do
+      task_1 = Task.new 'task_1'
+      task_2 = Task.new 'task_2', [task_1]
+      task_3 = Task.new 'task_3', [task_2]
+      task_1.depended_tasks = [task_3]
+
+      descendant_depended_tasks = task_3.descendant_depended_tasks
+      expect(descendant_depended_tasks.length).to eq(2)
+      expect(descendant_depended_tasks).to match_array([task_1, task_2])
+    end
+
+    it 'should handle a more complex case' do
+      task_1 = Task.new 'task_1'
+      task_2 = Task.new 'task_2'
+      task_3 = Task.new 'task_3'
+      task_4 = Task.new 'task_4'
+      task_5 = Task.new 'task_5'
+      task_6 = Task.new 'task_6'
+      task_1.depended_tasks = [task_2]
+      task_2.depended_tasks = [task_3, task_4]
+      task_3.depended_tasks = [task_1, task_5, task_6]
+      task_4.depended_tasks = [task_5]
+
+      descendant_depended_tasks = task_1.descendant_depended_tasks
+      expect(descendant_depended_tasks.length).to eq(5)
+      expect(descendant_depended_tasks).to match_array([task_2, task_3, task_4, task_5, task_6])
+    end
   end
 
-  it 'should handle the circular reference' do
-    task_1 = Task.new 'task_1'
-    task_2 = Task.new 'task_2', [task_1]
-    task_3 = Task.new 'task_3', [task_2]
-    task_1.depended_tasks = [task_3]
+  context '#has_circular_reference?' do
 
-    descendant_depended_tasks = task_3.descendant_depended_tasks
-    expect(descendant_depended_tasks.length).to eq(2)
-    expect(descendant_depended_tasks).to match_array([task_1, task_2])
-  end
+    it 'works if there is no circular reference' do
+      task_1 = Task.new 'task_1'
+      task_2 = Task.new 'task_2'
+      task_3 = Task.new 'task_3', [task_1, task_2]
 
-  it 'should handle a more complex case' do
-    task_1 = Task.new 'task_1'
-    task_2 = Task.new 'task_2'
-    task_3 = Task.new 'task_3'
-    task_4 = Task.new 'task_4'
-    task_5 = Task.new 'task_5'
-    task_6 = Task.new 'task_6'
-    task_1.depended_tasks = [task_2]
-    task_2.depended_tasks = [task_3, task_4]
-    task_3.depended_tasks = [task_1, task_5, task_6]
-    task_4.depended_tasks = [task_5]
+      expect(task_3.has_circular_reference?).to be false
+    end
 
-    descendant_depended_tasks = task_1.descendant_depended_tasks
-    expect(descendant_depended_tasks.length).to eq(5)
-    expect(descendant_depended_tasks).to match_array([task_2, task_3, task_4, task_5, task_6])
+    it 'works if there is a child vertice references the starting vertice' do
+      task_1 = Task.new 'task_1'
+      task_2 = Task.new 'task_2'
+      task_3 = Task.new 'task_3'
+
+      task_1.depended_tasks = [task_2]
+      task_2.depended_tasks = [task_3]
+      task_3.depended_tasks = [task_1]
+
+      expect(task_1.has_circular_reference?).to be true
+      expect(task_2.has_circular_reference?).to be true
+      expect(task_3.has_circular_reference?).to be true
+    end
+
+    it 'works if there are two vertices reference with each other' do
+      task_1 = Task.new 'task_1'
+      task_2 = Task.new 'task_2'
+      task_3 = Task.new 'task_3'
+
+      task_1.depended_tasks = [task_2]
+      task_2.depended_tasks = [task_3]
+      task_3.depended_tasks = [task_2]
+
+      expect(task_1.has_circular_reference?).to be true
+      expect(task_2.has_circular_reference?).to be true
+      expect(task_3.has_circular_reference?).to be true
+    end
   end
 
 end

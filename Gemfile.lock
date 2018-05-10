@@ -2,8 +2,6 @@ PATH
   remote: .
   specs:
     acts_as_graph (0.0.1)
-      byebug
-      rspec
 
 GEM
   remote: https://rubygems.org/
@@ -29,6 +27,8 @@ PLATFORMS
 
 DEPENDENCIES
   acts_as_graph!
+  byebug
+  rspec
 
 BUNDLED WITH
    1.16.1

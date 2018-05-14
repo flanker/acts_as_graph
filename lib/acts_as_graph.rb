@@ -1,3 +1,5 @@
+require 'acts_as_graph/dag'
+
 module ActsAsGraph
 
   def self.included base
@@ -49,14 +51,14 @@ module ActsAsGraph
     end
   end
 
+  def child_vertices
+    self.send children_method_name
+  end
+
   private
 
   def children_method_name
     self.class.children_method_name
-  end
-
-  def child_vertices
-    self.send children_method_name
   end
 
 end

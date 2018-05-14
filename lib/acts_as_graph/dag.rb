@@ -22,7 +22,7 @@ module ActsAsGraph
       visited << vertice
       vertice.child_vertices.each do |child_vertice|
         dfs(child_vertice, visited, post_order) unless visited.include?(child_vertice)
-      end
+      end if vertice.respond_to?(:child_vertices)
       post_order << vertice
     end
 

@@ -103,6 +103,23 @@ RSpec.describe ActsAsGraph do
       expect(task_3.has_circular_reference?).to be true
     end
 
+    it 'works if the circular reference has longer path' do
+      task_1 = Task.new 'task_1'
+      task_2 = Task.new 'task_2'
+      task_3 = Task.new 'task_3'
+      task_4 = Task.new 'task_4'
+
+      task_1.depended_tasks = [task_2]
+      task_2.depended_tasks = [task_3]
+      task_3.depended_tasks = [task_4]
+      task_4.depended_tasks = [task_1]
+
+      expect(task_1.has_circular_reference?).to be true
+      expect(task_2.has_circular_reference?).to be true
+      expect(task_3.has_circular_reference?).to be true
+      expect(task_4.has_circular_reference?).to be true
+    end
+
     it 'works if there are two vertices reference with each other' do
       task_1 = Task.new 'task_1'
       task_2 = Task.new 'task_2'
@@ -115,6 +132,21 @@ RSpec.describe ActsAsGraph do
       expect(task_1.has_circular_reference?).to be true
       expect(task_2.has_circular_reference?).to be true
       expect(task_3.has_circular_reference?).to be true
+    end
+
+    it 'works in complex case' do
+      task_1 = Task.new 'task_1'
+      task_2 = Task.new 'task_2'
+      task_3 = Task.new 'task_3'
+      task_4 = Task.new 'task_4'
+
+      task_2.depended_tasks = [task_1]
+      task_3.depended_tasks = [task_1, task_2]
+      task_4.depended_tasks = [task_2, task_3]
+
+      # expect(task_2.has_circular_reference?).to be false
+      # expect(task_3.has_circular_reference?).to be false
+      expect(task_4.has_circular_reference?).to be false
     end
 
     it 'supports other type of object as a child' do

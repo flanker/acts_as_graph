@@ -44,8 +44,8 @@ module ActsAsGraph
   def has_circular_reference_in_path? path
     child_vertices.any? do |child_vertice|
       return true if path.include?(child_vertice)
-      path << child_vertice
-      child_vertice.has_circular_reference_in_path?(path) if child_vertice.respond_to?(:has_circular_reference_in_path?)
+      next_path = path + [child_vertice]
+      child_vertice.has_circular_reference_in_path?(next_path) if child_vertice.respond_to?(:has_circular_reference_in_path?)
     end
   end
 

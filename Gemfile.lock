@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    acts_as_graph (0.0.1)
+    acts_as_graph (0.0.2)
 
 GEM
   remote: https://rubygems.org/
@@ -31,4 +31,4 @@ DEPENDENCIES
   rspec
 
 BUNDLED WITH
-   1.16.1
+   1.17.2

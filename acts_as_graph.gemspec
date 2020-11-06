@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.description = 'A very simple acts as graph for your model'
   s.license     = 'MIT'
 
-  s.required_ruby_version     = '>= 2.3'
+  s.required_ruby_version     = '>= 2.5'
   s.required_rubygems_version = '>= 1.3.6'
 
   s.files        = `git ls-files`.split("\n")

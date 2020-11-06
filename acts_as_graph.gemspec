@@ -9,10 +9,11 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = ['Zhichao Feng']
   s.email       = ['flankerfc@gmail.com']
-  s.homepage    = 'https://github.com/flanker'
+  s.homepage    = 'https://github.com/flanker/acts_as_graph'
   s.summary     = 'A very simple acts as graph for your model'
   s.description = 'A very simple acts as graph for your model'
   s.license     = 'MIT'
+  s.metadata    = {'source_code_uri' => 'https://github.com/flanker/acts_as_graph'}
 
   s.required_ruby_version     = '>= 2.5'
   s.required_rubygems_version = '>= 1.3.6'

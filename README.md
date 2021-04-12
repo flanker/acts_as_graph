@@ -49,3 +49,5 @@ task.descendant_depended_tasks    # returns all the descendant
 
 task.has_circular_reference?    # check if descendant has circular reference
 ```
+
+[Check unit tests for more information](https://github.com/flanker/acts_as_graph/blob/master/spec/acts_as_graph_spec.rb)

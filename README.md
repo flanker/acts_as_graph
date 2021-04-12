@@ -2,11 +2,11 @@
 
 A very simple acts as graph for your model
 
+rubygems.org link: https://rubygems.org/gems/acts_as_graph
+
 ## How to use
 
 If you have a model like this code below:
-
-rubygems.org link: https://rubygems.org/gems/acts_as_graph
 
 ```ruby
 class Task

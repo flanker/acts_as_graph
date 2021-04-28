@@ -1,5 +1,7 @@
 # acts_as_graph
 
+[![Build Status](https://travis-ci.com/flanker/acts_as_graph.svg?branch=master)](https://travis-ci.com/flanker/acts_as_graph)
+
 A very simple acts as graph for your model
 
 rubygems.org link: https://rubygems.org/gems/acts_as_graph
